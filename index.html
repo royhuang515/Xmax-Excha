@@ -12,7 +12,6 @@
       font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
     }
     body {
-      /* 全白背景，加入聖誕裝飾圖案點綴 */
       background-color: #ffffff;
       background-image: 
         radial-gradient(#ffcccc 15%, transparent 16%), 
@@ -28,7 +27,7 @@
       position: relative;
     }
 
-    /* 裝飾用的背景圖案（聖誕樹與禮物盒示意） */
+    /* 裝飾用的背景圖案 */
     .deco-elements {
       position: absolute;
       width: 100%;
@@ -52,9 +51,9 @@
 
     /* 調查箱木頭質感主框體 */
     .card {
-      background: #deb887; /* 溫暖的木頭基底色 */
+      background: #deb887;
       background-image: linear-gradient(135deg, #d2a679 0%, #c49a6c 100%);
-      border: 6px solid #8b5a2b; /* 深木色邊框 */
+      border: 6px solid #8b5a2b;
       border-radius: 24px;
       box-shadow: 0 20px 45px rgba(139, 90, 43, 0.35), inset 0 2px 5px rgba(255,255,255,0.4);
       width: 100%;
@@ -64,26 +63,8 @@
       z-index: 2;
     }
 
-    .settings-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid #8b5a2b;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-weight: bold;
-      color: #5c3a21;
-    }
-    .settings-btn:hover {
-      background: #fff;
-    }
-
     h1 {
-      color: #7b1113; /* 沉穩的聖誕紅 */
+      color: #7b1113;
       font-size: 28px;
       text-align: center;
       margin-top: 10px;
@@ -91,7 +72,6 @@
       text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
     }
 
-    /* 子標題：無底色，乾淨俐落 */
     .subtitle {
       color: #5c3a21;
       text-align: center;
@@ -100,7 +80,6 @@
       margin-bottom: 30px;
     }
 
-    /* 內文填寫區塊改用柔和的米白色內襯，營造箱內紙條感 */
     .inner-box {
       background: #fffaf0;
       border: 2px dashed #b5835a;
@@ -158,37 +137,10 @@
       background: #219150;
       transform: translateY(-1px);
     }
-
-    /* 彈窗樣式 */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 450px;
-    }
-    .modal-content input {
-      width: 100%;
-      padding: 12px;
-      margin: 15px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- 背景點綴的聖誕樹與禮物盒 -->
   <div class="deco-elements">
     <div class="deco-item" style="top: 10%; left: 10%;">🎄</div>
     <div class="deco-item" style="top: 20%; right: 12%;">🎁</div>
@@ -197,7 +149,6 @@
   </div>
 
   <div class="card">
-    <button class="settings-btn" onclick="openSettings()">⚙️ 主辦人設定</button>
     <h1>📦 盲盒交換禮物調查箱</h1>
     <div class="subtitle">300元以內的盲盒、扭蛋、玩具類</div>
 
@@ -211,54 +162,24 @@
     <button class="btn-submit" onclick="submitData()">🎁 送出許願</button>
   </div>
 
-  <!-- 設定視窗 -->
-  <div class="modal" id="settingsModal">
-    <div class="modal-content">
-      <h3>⚙️ 主辦人後端設定</h3>
-      <p style="font-size: 13px; color: #666; margin-top: 8px;">請貼上你的 Google Web App URL：</p>
-      <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
-      <div style="display: flex; gap: 10px; justify-content: flex-end;">
-        <button onclick="closeSettings()" style="padding: 10px 18px; background: #95a5a6; color: white; border: none; border-radius: 6px; cursor: pointer;">取消</button>
-        <button onclick="saveSettings()" style="padding: 10px 18px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">儲存設定</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    function openSettings() {
-      document.getElementById('scriptUrlInput').value = localStorage.getItem('script_url') || '';
-      document.getElementById('settingsModal').style.display = 'flex';
-    }
-    function closeSettings() {
-      document.getElementById('settingsModal').style.display = 'none';
-    }
-
-    function saveSettings() {
-      const url = document.getElementById('scriptUrlInput').value.trim();
-      if (!url) {
-        alert('請輸入有效的 URL！');
-        return;
-      }
-      localStorage.setItem('script_url', url);
-      alert('主辦人連結設定完成！');
-      closeSettings();
-    }
+    // 🔴【重要】請將下方引號內的網址，替換成你剛剛測試成功的那串 Google Apps Script URL (/exec 結尾)
+    const SCRIPT_URL = "https://script.google.com/macros/s/你的Google Apps Script長網址/exec";
 
     function submitData() {
       const answer = document.getElementById('userAnswer').value.trim();
-      const scriptUrl = localStorage.getItem('script_url');
-
-      if (!scriptUrl) {
-        alert('請點選右上角「⚙️ 主辦人設定」，貼入你的 Google Apps Script 網址！');
-        return;
-      }
 
       if (!answer) {
         alert('請寫下你的想法再送出喔！');
         return;
       }
 
-      fetch(scriptUrl, {
+      // 鎖定按鈕避免重複點擊
+      const btn = document.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.innerText = '傳送中...';
+
+      fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -269,9 +190,13 @@
       .then(() => {
         alert('送出成功！主辦人已收到你的盲盒許願卡囉！');
         document.getElementById('userAnswer').value = '';
+        btn.disabled = false;
+        btn.innerText = '🎁 送出許願';
       })
       .catch(err => {
-        alert('送出失敗，請檢查網路或網址設定：' + err);
+        alert('送出失敗，請稍後再試：' + err);
+        btn.disabled = false;
+        btn.innerText = '🎁 送出許願';
       });
     }
   </script>
