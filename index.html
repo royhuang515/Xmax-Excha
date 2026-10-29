@@ -27,7 +27,6 @@
       position: relative;
     }
 
-    /* 裝飾用的背景圖案 */
     .deco-elements {
       position: absolute;
       width: 100%;
@@ -49,7 +48,6 @@
       100% { transform: translateY(-8px); }
     }
 
-    /* 調查箱木頭質感主框體 */
     .card {
       background: #deb887;
       background-image: linear-gradient(135deg, #d2a679 0%, #c49a6c 100%);
@@ -152,52 +150,34 @@
     <h1>📦 盲盒交換禮物調查箱</h1>
     <div class="subtitle">300元以內的盲盒、扭蛋、玩具類</div>
 
-    <div class="inner-box">
-      <div class="question-title">我喜歡、我希望、我想要什麼樣的盲盒呢？</div>
-      <div class="sub-desc">💡 各種形容都可以，像是古怪的、可愛的、動漫聯名等，<strong>不能直接講系列！</strong></div>
+    <!-- 隱藏的 iframe 用來接收送出後的回應，避免頁面跳轉 -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { alert('送出成功！主辦人已收到你的盲盒許願卡囉！'); document.getElementById('userAnswer').value=''; submitted=false; }"></iframe>
 
-      <textarea id="userAnswer" placeholder="例：我喜歡搞怪又可愛的公仔，希望收到比較幽默、放在辦公桌上很療癒的盲盒..."></textarea>
-    </div>
-    
-    <button class="btn-submit" onclick="submitData()">🎁 送出許願</button>
+    <!-- 採用原生 form 提交，target 指向隱藏 iframe -->
+    <form id="giftForm" method="POST" action="你的Google Apps Script長網址" target="hidden_iframe" onsubmit="return handleFormSubmit();">
+      <div class="inner-box">
+        <div class="question-title">我喜歡、我希望、我想要什麼樣的盲盒呢？</div>
+        <div class="sub-desc">💡 各種形容都可以，像是古怪的、可愛的、動漫聯名等，<strong>不能直接講系列！</strong></div>
+
+        <!-- 這裡的 name="answer" 必須對應到 Google Apps Script 接收的欄位 -->
+        <textarea id="userAnswer" name="answer" placeholder="例：我喜歡搞怪又可愛的公仔，希望收到比較幽默、放在辦公桌上很療癒的盲盒..."></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit">🎁 送出許願</button>
+    </form>
   </div>
 
   <script>
-    // 🔴【重要】請將下方引號內的網址，替換成你剛剛測試成功的那串 Google Apps Script URL (/exec 結尾)
-    const SCRIPT_URL = "https://script.google.com/macros/s/你的Google Apps Script長網址/exec";
+    let submitted = false;
 
-    function submitData() {
+    function handleFormSubmit() {
       const answer = document.getElementById('userAnswer').value.trim();
-
       if (!answer) {
         alert('請寫下你的想法再送出喔！');
-        return;
+        return false;
       }
-
-      // 鎖定按鈕避免重複點擊
-      const btn = document.querySelector('.btn-submit');
-      btn.disabled = true;
-      btn.innerText = '傳送中...';
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ answer: answer })
-      })
-      .then(() => {
-        alert('送出成功！主辦人已收到你的盲盒許願卡囉！');
-        document.getElementById('userAnswer').value = '';
-        btn.disabled = false;
-        btn.innerText = '🎁 送出許願';
-      })
-      .catch(err => {
-        alert('送出失敗，請稍後再試：' + err);
-        btn.disabled = false;
-        btn.innerText = '🎁 送出許願';
-      });
+      submitted = true;
+      return true;
     }
   </script>
 </body>
